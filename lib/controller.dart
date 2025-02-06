@@ -550,7 +550,7 @@ class AppController {
     updateTray(true);
     await _initCore();
     await _initStatus();
-    autoLaunch?.updateStatus(
+    autoLaunch.updateStatus(
       _ref.read(appSettingProvider).autoLaunch,
     );
     autoUpdateProfiles();
