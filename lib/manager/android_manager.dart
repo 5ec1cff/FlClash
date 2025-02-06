@@ -39,6 +39,19 @@ class _AndroidContainerState extends ConsumerState<AndroidManager>
       }
     });
     service?.addListener(this);
+    ref.listenManual(
+      appSettingProvider.select((state) => state.autoLaunch),
+      (prev, next) {
+        if (prev != next) {
+          debouncer.call(
+            FunctionTag.autoLaunch,
+            () {
+              autoLaunch.updateStatus(next);
+            },
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -60,7 +73,7 @@ class _AndroidContainerState extends ConsumerState<AndroidManager>
     );
     super.onServiceCrash(message);
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return widget.child;

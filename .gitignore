@@ -65,6 +65,10 @@ CLAUDE.md
 /macos/**/Package.resolved
 devtools_options.yaml
 
+/android/build
+/android/core/.cxx
+/android/core/src/main/jniLibs
+
 # FVM Version Cache
 .fvm/
 .fvmrc

@@ -49,7 +49,7 @@ extension InitControllerExt on AppController {
     updateTray();
     autoUpdateProfiles();
     autoCheckUpdate();
-    autoLaunch?.updateStatus(_ref.read(appSettingProvider).autoLaunch);
+    autoLaunch.updateStatus(_ref.read(appSettingProvider).autoLaunch);
     if (!_ref.read(appSettingProvider).silentLaunch) {
       window?.show();
     } else {

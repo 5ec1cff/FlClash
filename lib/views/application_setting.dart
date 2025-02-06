@@ -270,7 +270,8 @@ class ApplicationSettingView extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> items = [
       MinimizeItem(),
-      if (system.isDesktop) ...[AutoLaunchItem(), SilentLaunchItem()],
+      AutoLaunchItem(),
+      if (system.isDesktop) ...[SilentLaunchItem()],
       AutoRunItem(),
       if (system.isAndroid) ...[HiddenItem()],
       AnimateTabItem(),

@@ -3,6 +3,8 @@ package com.follow.clash.plugins
 import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.ComponentInfo
@@ -16,6 +18,7 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import com.android.tools.smali.dexlib2.dexbacked.DexBackedDexFile
+import com.follow.clash.AutoStartReceiver
 import com.follow.clash.R
 import com.follow.clash.common.Components
 import com.follow.clash.common.GlobalState
@@ -42,6 +45,7 @@ import java.lang.ref.WeakReference
 import java.util.zip.ZipFile
 
 class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware {
+    private lateinit var applicationContext: Context
 
     companion object {
         const val VPN_PERMISSION_REQUEST_CODE = 1001
@@ -154,6 +158,27 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
             "tip" -> {
                 val message = call.argument<String>("message")
                 tip(message)
+                result.success(true)
+            }
+
+            "isAutoStartEnabled" -> {
+                val context = applicationContext
+                val enabled = context.packageManager.getComponentEnabledSetting(
+                    ComponentName(context, AutoStartReceiver::class.java)
+                ).and(PackageManager.COMPONENT_ENABLED_STATE_ENABLED) != 0
+                result.success(enabled)
+            }
+
+            "setAutoStartEnabled" -> {
+                val enabled = call.arguments as Boolean
+                val context = applicationContext
+                val value = if (enabled) PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                context.packageManager.setComponentEnabledSetting(
+                    ComponentName(context, AutoStartReceiver::class.java),
+                    value,
+                    PackageManager.DONT_KILL_APP
+                )
                 result.success(true)
             }
 
@@ -367,6 +392,7 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
     }
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        applicationContext = flutterPluginBinding.applicationContext
         scope = CoroutineScope(Dispatchers.Default)
         channel =
             MethodChannel(flutterPluginBinding.binaryMessenger, "${Components.PACKAGE_NAME}/app")
