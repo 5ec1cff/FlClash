@@ -19,8 +19,6 @@ if (NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 
     add_link_options(
             -flto
-            -Wl,--gc-sections
-            -Wl,--strip-all
             -Wl,--exclude-libs=ALL
     )
 
