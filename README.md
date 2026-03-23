@@ -1,3 +1,19 @@
+
+# 编译 apk
+
+```
+dart .\setup.dart android
+```
+
+坑点
+
+1. 如果是本地构建，建议每次构建都重新 clone 一遍仓库，因为原项目的脚本实在太脏了。（例子：某次重构把 jniLibs 放到了 core 模块，但是此前在 app 模块，这样老的 app 模块和新的 core 模块都有 jniLibs ，AGP 在复制的时候直接选择了 app 模块的老旧 libclash.so ，导致产物出现问题）  
+2. 如果要反复编译，最好把 setup.dart 里面的 getDistributor 的 `clean distributor` `upgrade distributor` 给注释了，纯浪费时间（实际上 go build 每次也都是重新跑的）  
+3. 如果要用 Android Studio 打开 android 项目，最好把 `project.layout.buildDirectory.value(newSubprojectBuildDir)` 给注释掉，否则无法同步。  
+4. `--flutter-build-args=verbose,` 的 `verbose,` 最好移除，因为出错之后除了打印冗长无用的 gradle stacktrace 之外没有任何用。   
+
+---
+
 <div>
 
 [**简体中文**](README_zh_CN.md)

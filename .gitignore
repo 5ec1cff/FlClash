@@ -68,6 +68,7 @@ devtools_options.yaml
 /android/build
 /android/core/.cxx
 /android/core/src/main/jniLibs
+env.json
 
 # FVM Version Cache
 .fvm/
